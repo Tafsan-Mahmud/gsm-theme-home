@@ -1,0 +1,1884 @@
+/* ══════════════════════════════════════════════════════════════
+   GSM THEME — style.css
+   Black & white core, with a violet → rose → orange signature
+   gradient reserved for special moments only (text accent, the
+   one gradient button, card borders, blurred ambient glow,
+   gradient checkbox). Everything else stays strict black/white.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── § 1. TOKENS ─────────────────────────────────────────────── */
+:root {
+  /* core neutrals */
+  --gsm-black: #0a0a0c;
+  --gsm-black-soft: #15151a;
+  --gsm-white: #ffffff;
+  --gsm-gray-50: #fafafa;
+  --gsm-gray-100: #f3f3f5;
+  --gsm-gray-150: #ececef;
+  --gsm-gray-200: #e2e2e7;
+  --gsm-gray-300: #cfcfd6;
+  --gsm-gray-400: #9d9da7;
+  --gsm-gray-500: #71717a;
+  --gsm-gray-600: #52525b;
+  --gsm-gray-700: #3a3a40;
+  --gsm-gray-800: #232328;
+  --gsm-gray-900: #141417;
+
+  /* signature gradient — used sparingly, on purpose */
+  --gsm-grad-1: #9924FF;
+  --gsm-grad-2: #B81F5D;
+  --gsm-grad-3: #FC7718;
+  --gsm-gradient: linear-gradient(135deg, var(--gsm-grad-1) 0%, var(--gsm-grad-2) 52%, var(--gsm-grad-3) 100%);
+  --gsm-gradient-soft: linear-gradient(135deg, rgba(153, 36, 255, .14), rgba(184, 31, 93, .14), rgba(252, 119, 24, .14));
+  --gsm-gradient-glow: radial-gradient(circle, rgba(153, 36, 255, .55), rgba(184, 31, 93, .35) 45%, rgba(252, 119, 24, 0) 75%);
+
+  /* hero background base — flat light surface; the gradient now
+     lives in three soft blurred blobs (see .gsm-hero::after) */
+  --gsm-hero-bg: #fafafa;
+
+  /* surfaces */
+  --gsm-bg-body: #ffffff;
+  --gsm-border-light: rgba(10, 10, 12, 0.08);
+  --gsm-border-base: rgba(10, 10, 12, 0.133);
+  --gsm-border-strong: rgba(10, 10, 12, 0.22);
+
+  /* text */
+  --gsm-text-primary: var(--gsm-black);
+  --gsm-text-secondary: var(--gsm-gray-700);
+  --gsm-text-muted: var(--gsm-gray-500);
+  --gsm-text-inverse: #ffffff;
+
+  /* radius */
+  --gsm-r-sm: 8px;
+  --gsm-r-md: 14px;
+  --gsm-r-lg: 22px;
+  --gsm-r-xl: 30px;
+  --gsm-r-pill: 100px;
+
+  /* motion */
+  --gsm-ease: cubic-bezier(.16, 1, .3, 1);
+  --gsm-ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --gsm-fast: .18s;
+  --gsm-base: .3s;
+  --gsm-slow: .5s;
+
+  /* type */
+  --gsm-font-display: 'Space Grotesk', sans-serif;
+  --gsm-font-body: 'Inter', sans-serif;
+
+  /* shadows */
+  --gsm-shadow-sm: 0 2px 10px rgba(10, 10, 12, 0.04);
+  --gsm-shadow-md: 0 10px 30px rgba(10, 10, 12, .08);
+  --gsm-shadow-lg: 0 24px 60px rgba(10, 10, 12, .14);
+  --gsm-shadow-device: 0 40px 70px rgba(10, 10, 12, .35), 0 10px 24px rgba(10, 10, 12, .18);
+
+  --gsm-nav-blur: blur(16px) saturate(160%);
+  --gsm-nav-bg-scroll: rgba(255, 255, 255, .72);
+}
+
+/* ── § 2. RESET / BASE ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--gsm-font-body);
+  background: var(--gsm-bg-body);
+  color: var(--gsm-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.gsm-text-gradient {
+  background: var(--gsm-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 3. BUTTON SYSTEM — only three: primary, outline, gradient.
+   No proliferation of variants. Sizes: sm / (default) / lg.
+   ══════════════════════════════════════════════════════════════ */
+.gsm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--gsm-font-body);
+  font-size: .92rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .01em;
+  padding: 14px 26px;
+  border-radius: var(--gsm-r-pill);
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--gsm-base) var(--gsm-ease),
+    color var(--gsm-base) var(--gsm-ease),
+    border-color var(--gsm-base) var(--gsm-ease),
+    box-shadow var(--gsm-base) var(--gsm-ease),
+    transform var(--gsm-fast) var(--gsm-ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* primary — solid black */
+.gsm-btn-primary {
+  background: var(--gsm-black);
+  color: var(--gsm-text-inverse);
+  border-color: var(--gsm-black);
+}
+
+.gsm-btn-primary:hover {
+  background: var(--gsm-gray-900);
+  transform: translateY(-2px);
+  box-shadow: var(--gsm-shadow-md);
+  color: var(--gsm-text-inverse);
+}
+
+.gsm-btn-primary:active {
+  transform: translateY(0) scale(.99);
+}
+
+/* outline — black ring, fills black on hover */
+.gsm-btn-outline {
+  background: transparent;
+  color: var(--gsm-black);
+  border-color: var(--gsm-border-strong);
+}
+
+.gsm-btn-outline:hover {
+  background: var(--gsm-black);
+  border-color: var(--gsm-black);
+  color: var(--gsm-text-inverse);
+  transform: translateY(-2px);
+}
+
+.gsm-btn-outline:active {
+  transform: translateY(0);
+}
+
+/* gradient — reserved for the one "special" CTA per view */
+.gsm-btn-gradient {
+  background: var(--gsm-gradient);
+  color: var(--gsm-text-inverse);
+  border-color: transparent;
+  box-shadow: 0 8px 24px rgba(184, 31, 93, .30);
+}
+
+.gsm-btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(184, 31, 93, .40);
+  color: var(--gsm-text-inverse);
+  filter: saturate(1.1);
+}
+
+.gsm-btn-gradient:active {
+  transform: translateY(0);
+}
+
+.gsm-btn-sm {
+  font-size: .82rem;
+  padding: 12px 20px;
+}
+
+.gsm-btn-lg {
+  font-size: .98rem;
+  padding: 16px 32px;
+}
+
+.gsm-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 4. (reusable, for later pages) — gradient card border,
+   gradient checkbox. Defined once here so every future page on
+   this project can reuse them without re-inventing the pattern.
+   ══════════════════════════════════════════════════════════════ */
+
+/* special card border — wrap any card with this to get a 1px
+   gradient ring instead of the usual flat gray border */
+.gsm-card-gradient {
+  position: relative;
+  border-radius: var(--gsm-r-lg);
+  background: var(--gsm-white);
+  padding: 1px;
+  background-image: var(--gsm-gradient);
+}
+
+.gsm-card-gradient>* {
+  background: var(--gsm-white);
+  border-radius: calc(var(--gsm-r-lg) - 1px);
+  display: block;
+}
+
+/* gradient checkbox */
+.gsm-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: .88rem;
+  color: var(--gsm-text-secondary);
+  user-select: none;
+}
+
+.gsm-check input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.gsm-check-box {
+  width: 19px;
+  height: 19px;
+  border-radius: 6px;
+  border: 1.5px solid var(--gsm-border-strong);
+  background: var(--gsm-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color var(--gsm-fast) var(--gsm-ease), background var(--gsm-fast) var(--gsm-ease);
+}
+
+.gsm-check-box svg {
+  width: 11px;
+  height: 11px;
+  opacity: 0;
+  transform: scale(.6);
+  transition: opacity var(--gsm-fast) var(--gsm-ease), transform var(--gsm-fast) var(--gsm-ease-spring);
+}
+
+.gsm-check input:checked+.gsm-check-box {
+  background: var(--gsm-gradient);
+  border-color: transparent;
+}
+
+.gsm-check input:checked+.gsm-check-box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ambient blurred gradient glow — drop this behind any visual */
+.gsm-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gsm-gradient-glow);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 5. NAVBAR
+   ══════════════════════════════════════════════════════════════ */
+.gsm-navbar {
+  padding: 20px 0;
+  background: transparent;
+  transition: background var(--gsm-base) var(--gsm-ease),
+    backdrop-filter var(--gsm-base) var(--gsm-ease),
+    box-shadow var(--gsm-base) var(--gsm-ease),
+    padding var(--gsm-base) var(--gsm-ease);
+  z-index: 1000;
+}
+
+.gsm-navbar.gsm-scrolled {
+  background: var(--gsm-nav-bg-scroll);
+  backdrop-filter: var(--gsm-nav-blur);
+  -webkit-backdrop-filter: var(--gsm-nav-blur);
+  box-shadow: 0 1px 0 var(--gsm-border-light), 0 4px 24px rgba(10, 10, 12, .06);
+  padding: 12px 0;
+}
+
+.gsm-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.gsm-brand-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  overflow: hidden;
+  background: var(--gsm-black);
+  color: var(--gsm-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--gsm-font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.gsm-brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gsm-brand-name {
+  font-family: var(--gsm-font-display);
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--gsm-black);
+  line-height: 1;
+}
+
+.gsm-brand-name span {
+  font-weight: 500;
+  color: var(--gsm-gray-500);
+}
+
+.gsm-nav-links {
+  gap: 4px;
+}
+
+.gsm-nav-link {
+  text-decoration: none;
+  font-family: var(--gsm-font-body);
+  font-size: .87rem;
+  font-weight: 500;
+  color: var(--gsm-gray-600) !important;
+  padding: 9px 16px !important;
+  border-radius: 0;
+  position: relative;
+  transition: color var(--gsm-fast) var(--gsm-ease);
+}
+
+.gsm-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: var(--gsm-black);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .28s var(--gsm-ease);
+}
+
+.gsm-nav-link:hover {
+  color: var(--gsm-black) !important;
+}
+
+.gsm-nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+.gsm-nav-link.active {
+  color: var(--gsm-black) !important;
+}
+
+.gsm-nav-link.active::after {
+  transform: scaleX(1);
+}
+
+.gsm-nav-cta {
+  flex-shrink: 0;
+}
+
+/* toggler */
+.gsm-toggler {
+  border: 1.5px solid var(--gsm-border-strong);
+  padding: 8px 10px;
+  border-radius: var(--gsm-r-sm);
+  background: var(--gsm-white);
+  box-shadow: none !important;
+  outline: none !important;
+  transition: border-color var(--gsm-base) var(--gsm-ease);
+}
+
+.gsm-toggler:hover {
+  border-color: var(--gsm-black);
+}
+
+.gsm-toggler-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 20px;
+}
+
+.gsm-toggler-icon span {
+  display: block;
+  height: 2px;
+  background: var(--gsm-black);
+  border-radius: 2px;
+  transition: all .32s var(--gsm-ease);
+  transform-origin: center;
+}
+
+[aria-expanded="true"] .gsm-toggler-icon span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+[aria-expanded="true"] .gsm-toggler-icon span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+[aria-expanded="true"] .gsm-toggler-icon span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   § 6. HERO
+   ══════════════════════════════════════════════════════════════ */
+.gsm-hero {
+  position: relative;
+  min-height: 100vh;
+  padding: 150px 0 70px;
+  display: flex;
+  align-items: center;
+  background: var(--gsm-hero-bg);
+  overflow: hidden;
+}
+
+/* faint grid texture — visible top-left, and a touch top-right */
+.gsm-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(10, 10, 12, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 10, 12, .035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image:
+    radial-gradient(ellipse 60% 60% at 12% 18%, black 0%, transparent 70%),
+    radial-gradient(ellipse 32% 32% at 92% 10%, black 0%, transparent 70%);
+  mask-image:
+    radial-gradient(ellipse 60% 60% at 12% 18%, black 0%, transparent 70%),
+    radial-gradient(ellipse 32% 32% at 92% 10%, black 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── 3 large blobs — cover most of the hero, white gap top-left ── */
+.gsm-hero::after {
+  content: '';
+  position: absolute;
+  top: -15%;
+  left: -15%;
+  right: -15%;
+  bottom: -15%;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse 46% 96% at 20% 133%, var(--gsm-grad-1) 53%, transparent 99%),
+    radial-gradient(ellipse 190% 202% at 51% 73%, var(--gsm-grad-2) 0%, transparent 22%),
+    radial-gradient(ellipse 153% 148% at 89% 45%, var(--gsm-grad-3) 0%, transparent 32%);
+  filter: blur(55px);
+}
+
+.gsm-hero-row {
+  position: relative;
+  z-index: 1;
+}
+
+.gsm-hero-content {
+  padding-right: 1rem;
+}
+
+
+.gsm-hero-heading {
+  font-family: var(--gsm-font-display);
+  font-size: clamp(2.4rem, 4.6vw, 3.7rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--gsm-black);
+  margin-bottom: 22px;
+}
+
+.gsm-hero-sub {
+  font-size: 1.02rem;
+  font-weight: 400;
+  color: var(--gsm-gray-700);
+  line-height: 1.75;
+  max-width: 460px;
+  margin-bottom: 38px;
+}
+
+.gsm-hero-actions {
+  gap: 28px !important;
+}
+
+.gsm-watch-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--gsm-black);
+  text-decoration: none;
+  transition: gap var(--gsm-base) var(--gsm-ease);
+}
+
+.gsm-watch-link:hover {
+  gap: 16px;
+  color: var(--gsm-black);
+}
+
+.gsm-watch-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
+  background-image: var(--gsm-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  color: var(--gsm-white);
+  font-size: 1.5rem;
+  box-shadow: var(--gsm-shadow-sm);
+  transition: transform var(--gsm-fast) var(--gsm-ease-spring);
+}
+
+.gsm-watch-link:hover .gsm-watch-icon {
+  transform: scale(1.08);
+}
+
+/* ── Mockup image slider ─────────────────────────────────────── */
+.gsm-hero-visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.gsm-mockup-wrap {
+  position: relative;
+  width: 100%;
+  /* no overflow:hidden — fades make the clip edge invisible */
+}
+
+/* all slides occupy the same grid cell so container height = one slide */
+.gsm-mockup-track {
+  display: grid;
+}
+
+.gsm-mockup-slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+
+.gsm-mockup-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.gsm-mockup-slide.slide-out-left,
+.gsm-mockup-slide.slide-out-right {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.gsm-mockup-slide img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 32px 60px rgba(10, 10, 12, .28));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* dot navigation */
+.gsm-dots {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+  padding-right: 8px;
+}
+
+.gsm-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(10, 10, 12, .35);
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  transition: background var(--gsm-base) var(--gsm-ease),
+    border-color var(--gsm-base) var(--gsm-ease),
+    width var(--gsm-base) var(--gsm-ease);
+}
+
+.gsm-dot.active {
+  background: var(--gsm-black);
+  border-color: var(--gsm-black);
+  width: 24px;
+  border-radius: var(--gsm-r-pill);
+}
+
+
+
+
+/* ══════════════════════════════════════════════════════════════
+   § SHOWCASE SECTION — browser mockup + text
+   ══════════════════════════════════════════════════════════════ */
+.gsm-showcase {
+  padding: 125px 0 125px;
+  overflow: hidden;
+}
+
+.bg-gray {
+  background: var(--gsm-gray-100);
+}
+
+.bg-white {
+  background: var(--gsm-white);
+}
+
+
+/* ── left column: browser window ─────────────────────────────── */
+.gsm-showcase-browser-col {
+  padding-left: 0;
+}
+
+.gsm-browser {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, .09);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, .04),
+    0 12px 40px rgba(0, 0, 0, .09),
+    0 40px 80px rgba(0, 0, 0, .06);
+  overflow: hidden;
+}
+
+
+.gsm-browser-chrome {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f2f2f2;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, .07);
+}
+
+.gsm-browser-dots {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.gsm-browser-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.gsm-browser-dot.red {
+  background: #ff5f57;
+}
+
+.gsm-browser-dot.yellow {
+  background: #febc2e;
+}
+
+.gsm-browser-dot.green {
+  background: #28c840;
+}
+
+.gsm-browser-url {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-family: var(--gsm-font-body);
+  font-size: .72rem;
+  color: #555;
+  background: rgba(255, 255, 255, .75);
+  border-radius: 6px;
+  padding: 4px 14px;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.gsm-browser-url svg {
+  flex-shrink: 0;
+  color: #888;
+}
+
+.gsm-browser-screenshot {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── right column: text ──────────────────────────────────────── */
+.gsm-showcase-text-right {
+  padding: 20px 60px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.gsm-showcase-text-left {
+  padding: 20px 24px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.gsm-showcase-heading {
+  /* font-family: var(--gsm-font-display); */
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 700;
+  color: var(--gsm-black);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-bottom: 22px;
+}
+
+.gsm-showcase-sub {
+  font-family: var(--gsm-font-body);
+  font-size: .98rem;
+  color: var(--gsm-gray-500);
+  line-height: 1.75;
+  max-width: 400px;
+  margin-bottom: 0;
+}
+
+/* ── Showcase entrance animations (all 3 sections) ──────────── */
+
+/* word-by-word heading */
+.gsm-word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(6px);
+  transition: opacity .75s ease,
+    filter .75s ease,
+    transform .75s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: var(--word-delay, 0s);
+}
+
+.gsm-word.gsm-revealed {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* browser hidden before reveal */
+.gsm-showcase.gsm-anim-start .gsm-browser.gsm-slide-left:not(.gsm-revealed) {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+.gsm-showcase.gsm-anim-start .gsm-browser.gsm-slide-right:not(.gsm-revealed) {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+/* keyframe animations — always replay from scratch on class add */
+@keyframes gsmSlideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gsmSlideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.gsm-showcase.gsm-anim-start .gsm-browser.gsm-slide-left.gsm-revealed {
+  animation: gsmSlideFromLeft 1.1s cubic-bezier(.16, 1, .3, 1) 0.1s both;
+}
+
+.gsm-showcase.gsm-anim-start .gsm-browser.gsm-slide-right.gsm-revealed {
+  animation: gsmSlideFromRight 1.1s cubic-bezier(.16, 1, .3, 1) 0.1s both;
+}
+
+
+
+
+/* ══════════════════════════════════════════════════════════════
+   HOSTING CARDS SECTION
+   ══════════════════════════════════════════════════════════════ */
+
+.hosting-section {
+  padding: 125px 0 125px;
+  overflow: hidden;
+}
+
+.gsm-host-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 27px;
+  padding: 10px 40px 10px 0;
+}
+
+.gsm-host-card {
+  background: var(--gsm-white);
+  border-radius: 18px;
+  padding: 22px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1.5px solid var(--gsm-border-base);
+  box-shadow: var(--gsm-shadow-sm);
+  transition: box-shadow .28s var(--gsm-ease),
+    transform .28s var(--gsm-ease-spring);
+}
+
+.gsm-host-card:hover {
+  box-shadow: var(--gsm-shadow-md);
+  transform: translateY(-3px);
+}
+
+.gsm-host-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gsm-host-icon img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.gsm-host-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+.gsm-host-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.gsm-host-name {
+  font-family: var(--gsm-font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gsm-black);
+  letter-spacing: -.01em;
+  display: block;
+}
+
+.gsm-host-desc {
+  font-family: var(--gsm-font-body);
+  font-size: .83rem;
+  color: var(--gsm-gray-400);
+  display: block;
+}
+
+/* ── Card stagger entrance animation ─────────────────────────── */
+@keyframes gsmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gsm-host-card.gsm-card-hidden {
+  opacity: 0;
+}
+
+.gsm-host-card.gsm-card-visible {
+  animation: gsmCardIn .65s cubic-bezier(.16, 1, .3, 1) var(--card-delay, 0s) both;
+}
+
+
+
+/* ══════════════════════════════════════════════════════════════
+   FAQ SECTION
+   ══════════════════════════════════════════════════════════════ */
+.FAQ-section {
+  padding: 125px 0 125px;
+  overflow: hidden;
+}
+
+
+.gsm-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Each item ───────────────────────────────────────────────── */
+.gsm-faq-item {
+  background: var(--gsm-white);
+  border: 1px solid var(--gsm-border-base);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color .25s var(--gsm-ease),
+    box-shadow .25s var(--gsm-ease);
+}
+
+.gsm-faq-item:hover {
+  border-color: var(--gsm-border-strong);
+  box-shadow: var(--gsm-shadow-sm);
+}
+
+/* ── Question button ─────────────────────────────────────────── */
+.gsm-faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: transparent;
+  border: none;
+  padding: 20px 20px;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--gsm-font-display);
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--gsm-black);
+  letter-spacing: -.01em;
+  transition: color .2s var(--gsm-ease);
+}
+
+.gsm-faq-q:hover {
+  color: var(--gsm-black);
+}
+
+/* ── Chevron icon box ────────────────────────────────────────── */
+.gsm-faq-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--gsm-gray-100);
+  border: 1px solid var(--gsm-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .8rem;
+  color: var(--gsm-gray-600);
+  transition: background .25s var(--gsm-ease),
+    border-color .25s var(--gsm-ease),
+    color .25s var(--gsm-ease);
+}
+
+.gsm-faq-icon i {
+  display: block;
+  transition: transform .4s cubic-bezier(.16, 1, .3, 1);
+}
+
+/* ── Rotate chevron when open ────────────────────────────────── */
+.gsm-faq-item.open .gsm-faq-icon {
+  background: var(--gsm-black);
+  border-color: var(--gsm-black);
+  color: var(--gsm-white);
+}
+
+.gsm-faq-item.open .gsm-faq-icon i {
+  transform: rotate(180deg);
+}
+
+/* ── Answer body — CSS grid trick for smooth height animation ── */
+.gsm-faq-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .4s cubic-bezier(.16, 1, .3, 1);
+}
+
+.gsm-faq-item.open .gsm-faq-body {
+  grid-template-rows: 1fr;
+}
+
+.gsm-faq-body-inner {
+  overflow: hidden;
+}
+
+.gsm-faq-body-inner p {
+  font-family: var(--gsm-font-body);
+  font-size: .88rem;
+  color: var(--gsm-gray-500);
+  line-height: 1.75;
+  padding: 0 20px 20px;
+  margin: 0;
+}
+
+/* ── FAQ item stagger entrance ───────────────────────────────── */
+@keyframes gsmFaqIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gsm-faq-item.gsm-faq-hidden {
+  opacity: 0;
+}
+
+.gsm-faq-item.gsm-faq-visible {
+  animation: gsmFaqIn .6s cubic-bezier(.16, 1, .3, 1) var(--faq-delay, 0s) both;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════════ */
+
+.gsm-footer {
+  background: #0a0a0c;
+  padding: 100px 0 100px;
+}
+
+/* ── Brand column ────────────────────────────────────────────── */
+.gsm-footer-brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-right: 40px;
+}
+
+/* reuse .gsm-brand from navbar — override colors for dark bg */
+.gsm-footer .gsm-brand-name {
+  color: var(--gsm-white);
+}
+
+.gsm-footer .gsm-brand-name span {
+  color: rgba(255, 255, 255, .45);
+}
+
+/* ── Social icons — minimal pill ─────────────────────────────── */
+
+/* ── Social icons ────────────────────────────────────────────── */
+.gsm-footer-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.gsm-footer-sicon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .06);
+  border: 1px solid rgba(255, 255, 255, .08);
+  color: rgba(255, 255, 255, .55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background .22s var(--gsm-ease),
+    border-color .22s var(--gsm-ease),
+    color .22s var(--gsm-ease),
+    transform .22s var(--gsm-ease-spring);
+}
+
+.gsm-footer-sicon:hover {
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .18);
+  color: var(--gsm-white);
+  transform: translateY(-1.5px);
+}
+
+/* ── Copyright ───────────────────────────────────────────────── */
+.gsm-footer-copy {
+  font-family: var(--gsm-font-body);
+  font-size: .8rem;
+  color: rgba(255, 255, 255, .28);
+  margin: 0;
+  line-height: 1;
+}
+
+/* ── Nav columns ─────────────────────────────────────────────── */
+.gsm-footer-nav-col {
+  padding-top: 4px;
+}
+
+.gsm-footer-heading {
+  font-family: var(--gsm-font-body);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gsm-white);
+  margin-bottom: 20px;
+}
+
+.gsm-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gsm-footer-links a {
+  font-family: var(--gsm-font-body);
+  font-size: .88rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, .45);
+  text-decoration: none;
+  transition: color .2s var(--gsm-ease);
+}
+
+.gsm-footer-links a:hover {
+  color: var(--gsm-white);
+}
+
+
+
+/* ══════════════════════════════════════════════════════════════
+   ORDER ENGINE WORKFLOW SECTION
+   ══════════════════════════════════════════════════════════════ */
+
+.gsm-wf-card {
+  background: var(--gsm-white);
+  border-radius: 20px;
+  border: 1px solid var(--gsm-border-base);
+  box-shadow: 0 2px 8px rgba(10, 10, 12, .04), 0 16px 48px rgba(10, 10, 12, .08);
+  overflow: hidden;
+}
+
+/* Header */
+.gsm-wf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--gsm-border-light);
+}
+
+.gsm-wf-hbrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gsm-wf-hlogo {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--gsm-border-light);
+  flex-shrink: 0;
+}
+
+.gsm-wf-hlogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gsm-wf-htitle {
+  font-family: var(--gsm-font-display);
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--gsm-black);
+}
+
+.gsm-wf-hurl {
+  font-size: .72rem;
+  color: var(--gsm-gray-400);
+  font-family: var(--gsm-font-body);
+}
+
+.gsm-wf-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--gsm-black);
+  color: var(--gsm-white);
+  font-family: var(--gsm-font-body);
+  font-size: .76rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--gsm-r-pill);
+}
+
+.gsm-wf-active-badge i {
+  color: #f4f4f4;
+  font-size: .92rem;
+}
+
+/* Inner / diagram */
+.gsm-wf-inner {
+  padding: 28px 22px 32px;
+}
+
+.gsm-wf-diagram {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1100 / 500;
+}
+
+/* SVG */
+.gsm-wf-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+
+/* Package icons hidden by default — JS sets opacity */
+.gsm-wf-svg g[id^="wf-pkg-"] {
+  opacity: 0;
+}
+
+/* Paths */
+.gsm-wf-line {
+  fill: none;
+  stroke-width: 3;
+  stroke-dasharray: 10 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wf-purple {
+  stroke: #7c3aed;
+  opacity: 0.2;
+}
+
+.wf-teal {
+  stroke: #10b981;
+  opacity: 0.2;
+}
+
+.wf-indigo {
+  stroke: #6366f1;
+  opacity: 0.2;
+}
+
+.wf-orange {
+  stroke: #f97316;
+  opacity: 0.2;
+}
+
+@keyframes wfFlow {
+  from {
+    stroke-dashoffset: 32;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.gsm-wf-line.gsm-wf-flowing {
+  opacity: 1 !important;
+  animation: wfFlow .6s linear infinite;
+}
+
+.gsm-wf-line.gsm-wf-used {
+  opacity: 0.45 !important;
+}
+
+/* Nodes */
+.gsm-wf-node {
+  position: absolute;
+  background: var(--gsm-white);
+  border: 1.5px solid var(--gsm-border-base);
+  border-radius: 14px;
+  padding: 13px 13px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  z-index: 2;
+  box-shadow: 0 1px 4px rgba(10, 10, 12, .06);
+  transition: border-color .3s ease, background .3s ease;
+}
+
+.gsm-wf-node-engine {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.gsm-wf-node-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+}
+
+.gsm-wf-nicon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: .82rem;
+  margin-top: 1px;
+}
+
+.gsm-wf-nname {
+  font-family: var(--gsm-font-display);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--gsm-black);
+  line-height: 1.3;
+}
+
+.gsm-wf-nname-light {
+  color: rgba(255, 255, 255, .92);
+}
+
+.gsm-wf-engine-sub {
+  font-size: .58rem;
+  color: rgba(255, 255, 255, 0.505);
+  font-family: var(--gsm-font-body);
+  margin-top: 1px;
+}
+
+.gsm-wf-nfoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.gsm-wf-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dot-c, #ccc);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.gsm-wf-nbadge {
+  font-family: var(--gsm-font-body);
+  font-size: .6rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--gsm-r-pill);
+  background: var(--bb, #f5f5f5);
+  color: var(--bc, #666);
+}
+
+.gsm-wf-n247 {
+  font-family: var(--gsm-font-body);
+  font-size: .6rem;
+  color: rgba(255, 255, 255, .25);
+}
+
+/* Active states */
+@keyframes wfDotPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.8);
+    opacity: .45;
+  }
+}
+
+.gsm-wf-node.gsm-wf-active .gsm-wf-dot {
+  animation: wfDotPulse .9s ease-in-out infinite;
+}
+
+#wf-node-co.gsm-wf-active {
+  border-color: #7c3aed;
+  background: #faf7ff;
+}
+
+#wf-node-oe.gsm-wf-active {
+  border-color: #64748b;
+  background: #243147;
+}
+
+#wf-node-di.gsm-wf-active {
+  border-color: #10b981;
+  background: #f0fdf9;
+}
+
+#wf-node-sa.gsm-wf-active {
+  border-color: #6366f1;
+  background: #f5f3ff;
+}
+
+#wf-node-cn.gsm-wf-active {
+  border-color: #f97316;
+  background: #fff9f5;
+}
+
+/* Bell shake */
+@keyframes wfBellShake {
+
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+
+  15% {
+    transform: rotate(-22deg);
+  }
+
+  30% {
+    transform: rotate(22deg);
+  }
+
+  45% {
+    transform: rotate(-14deg);
+  }
+
+  60% {
+    transform: rotate(14deg);
+  }
+
+  75% {
+    transform: rotate(-7deg);
+  }
+
+  90% {
+    transform: rotate(7deg);
+  }
+}
+
+#wf-node-cn.gsm-wf-active .bi-bell-fill {
+  display: inline-block;
+  animation: wfBellShake .75s ease-in-out .1s 2;
+  transform-origin: top center;
+}
+
+/* Mobile connectors hidden on desktop */
+.gsm-wf-conn {
+  display: none;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   § 7. RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 991px) {
+
+  #gsmNavMenu {
+    background: var(--gsm-white);
+    border: 1px solid var(--gsm-border-light);
+    border-radius: var(--gsm-r-lg);
+    margin-top: 12px;
+    box-shadow: var(--gsm-shadow-lg);
+  }
+
+  #gsmNavMenu .navbar-nav {
+    padding: 18px 18px 0;
+  }
+
+  .gsm-nav-links {
+    padding-bottom: 12px;
+  }
+
+  .gsm-nav-link {
+    display: block;
+    border-radius: var(--gsm-r-sm);
+    padding: 11px 14px !important;
+  }
+
+  .gsm-nav-link::after {
+    display: none;
+  }
+
+  .gsm-nav-link:hover,
+  .gsm-nav-link.active {
+    background: var(--gsm-gray-100);
+  }
+
+  .gsm-nav-cta {
+    border-top: 1px solid var(--gsm-border-light);
+    padding: 8px 18px 18px;
+    justify-content: center;
+  }
+
+  .navbar-collapse.collapsing {
+    transition: height 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+
+  .gsm-hero {
+    padding-top: 120px;
+    text-align: center;
+  }
+
+  .gsm-hero-content {
+    padding-right: 0;
+    margin-bottom: 56px;
+  }
+
+  .gsm-hero-sub {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .gsm-hero-actions {
+    justify-content: center;
+  }
+
+  .gsm-dots {
+    justify-content: center;
+  }
+
+  .gsm-showcase {
+    padding: 80px 0 80px;
+    overflow: hidden;
+  }
+
+  .hosting-section {
+    padding: 80px 0 80px;
+    overflow: hidden;
+  }
+
+  .gsm-browser {
+    margin-left: 0;
+  }
+
+  .gsm-showcase-text-right {
+    padding: 40px 5px 20px;
+  }
+
+  .gsm-showcase-text-left {
+    padding: 40px 5px 20px;
+  }
+
+  .gsm-showcase-sub {
+    max-width: 100%;
+  }
+
+  .gsm-host-grid {
+    padding: 0 0 0;
+  }
+
+  .FAQ-section {
+    padding: 80px 0 80px;
+    overflow: hidden;
+  }
+
+  .gsm-faq-list {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .gsm-footer {
+    padding: 56px 0 48px;
+  }
+
+  .gsm-footer-brand-col {
+    padding-right: 0;
+    margin-bottom: 40px;
+  }
+
+  .gsm-wf-card {
+    margin-top: 40px;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE ≤ 767px
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  .gsm-wf-inner {
+    padding: 16px;
+    overflow: visible;
+  }
+
+  .gsm-wf-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "co co"
+      "ca ca"
+      "oe oe"
+      "cb cb"
+      "di sa"
+      "cc cc"
+      "cn cn";
+    gap: 8px 10px;
+    position: static;
+    width: 100%;
+    height: auto;
+    aspect-ratio: unset;
+    min-width: unset;
+  }
+
+  .gsm-wf-svg {
+    display: none;
+  }
+
+  .gsm-wf-node {
+    position: static !important;
+    width: auto !important;
+    min-height: unset;
+  }
+
+  #wf-node-co {
+    grid-area: co;
+  }
+
+  #wf-node-oe {
+    grid-area: oe;
+  }
+
+  #wf-node-di {
+    grid-area: di;
+  }
+
+  #wf-node-sa {
+    grid-area: sa;
+  }
+
+  #wf-node-cn {
+    grid-area: cn;
+  }
+
+  /* ── Mobile path connectors ── */
+  .gsm-wf-conn {
+    display: block;
+    height: 32px;
+    position: relative;
+  }
+
+  .gsm-wf-conn-a {
+    grid-area: ca;
+  }
+
+  .gsm-wf-conn-b {
+    grid-area: cb;
+  }
+
+  .gsm-wf-conn-c {
+    grid-area: cc;
+  }
+
+  @keyframes wfMobileFlow {
+    from {
+      background-position-y: 0;
+    }
+
+    to {
+      background-position-y: 14px;
+    }
+  }
+
+  /* ── conn-a: single center line CO→OE (purple) ── */
+  .gsm-wf-conn-a::before {
+    content: '';
+    position: absolute;
+    left: calc(50% - 1.5px);
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: repeating-linear-gradient(to bottom, rgba(124, 58, 237, .25) 0, rgba(124, 58, 237, .25) 7px,
+        transparent 7px, transparent 14px);
+    border-radius: 2px;
+  }
+
+  .gsm-wf-conn-a.gsm-wf-conn-active::before {
+    background: repeating-linear-gradient(to bottom, #7c3aed 0, #7c3aed 7px, transparent 7px, transparent 14px);
+    animation: wfMobileFlow .4s linear infinite;
+  }
+
+  /* ── conn-b: TWO lines at DI-col and SA-col centers (OE→DI, OE→SA) ── */
+  /* No horizontal bar — just two straight vertical dashed lines */
+  .gsm-wf-conn-b::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* left line at ~25% (DI column center) and right line at ~75% (SA column center) */
+    background:
+      repeating-linear-gradient(to bottom, rgba(16, 185, 129, .25) 0, rgba(16, 185, 129, .25) 7px,
+        transparent 7px, transparent 14px) calc(25% - 1.5px) 0 / 3px 100% no-repeat,
+      repeating-linear-gradient(to bottom, rgba(99, 102, 241, .25) 0, rgba(99, 102, 241, .25) 7px,
+        transparent 7px, transparent 14px) calc(75% - 1.5px) 0 / 3px 100% no-repeat;
+  }
+
+  .gsm-wf-conn-b.gsm-wf-conn-active::before {
+    background:
+      repeating-linear-gradient(to bottom, #10b981 0, #10b981 7px, transparent 7px, transparent 14px) calc(25% - 1.5px) 0 / 3px 100% no-repeat,
+      repeating-linear-gradient(to bottom, #6366f1 0, #6366f1 7px, transparent 7px, transparent 14px) calc(75% - 1.5px) 0 / 3px 100% no-repeat;
+    animation: wfMobileFlow .4s linear infinite;
+  }
+
+  /* ── conn-c: TWO lines DI-col + SA-col → CN (orange, branch-aware) ── */
+  .gsm-wf-conn-c::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(to bottom, rgba(249, 115, 22, .25) 0, rgba(249, 115, 22, .25) 7px,
+        transparent 7px, transparent 14px) calc(25% - 1.5px) 0 / 3px 100% no-repeat,
+      repeating-linear-gradient(to bottom, rgba(249, 115, 22, .25) 0, rgba(249, 115, 22, .25) 7px,
+        transparent 7px, transparent 14px) calc(75% - 1.5px) 0 / 3px 100% no-repeat;
+  }
+
+  /* DI branch fires first (left line) */
+  .gsm-wf-conn-c.gsm-wf-conn-left::before {
+    background:
+      repeating-linear-gradient(to bottom, #f97316 0, #f97316 7px, transparent 7px, transparent 14px) calc(25% - 1.5px) 0 / 3px 100% no-repeat,
+      repeating-linear-gradient(to bottom, rgba(249, 115, 22, .25) 0, rgba(249, 115, 22, .25) 7px,
+        transparent 7px, transparent 14px) calc(75% - 1.5px) 0 / 3px 100% no-repeat;
+    animation: wfMobileFlow .4s linear infinite;
+  }
+
+  /* SA branch fires second (right line) */
+  .gsm-wf-conn-c.gsm-wf-conn-right::before {
+    background:
+      repeating-linear-gradient(to bottom, rgba(249, 115, 22, .25) 0, rgba(249, 115, 22, .25) 7px,
+        transparent 7px, transparent 14px) calc(25% - 1.5px) 0 / 3px 100% no-repeat,
+      repeating-linear-gradient(to bottom, #f97316 0, #f97316 7px, transparent 7px, transparent 14px) calc(75% - 1.5px) 0 / 3px 100% no-repeat;
+    animation: wfMobileFlow .4s linear infinite;
+  }
+
+  /* DI/SA side by side — smaller text */
+  #wf-node-di .gsm-wf-nname,
+  #wf-node-sa .gsm-wf-nname {
+    font-size: .65rem;
+  }
+
+  #wf-node-di .gsm-wf-nicon,
+  #wf-node-sa .gsm-wf-nicon {
+    width: 26px;
+    height: 26px;
+    font-size: .74rem;
+  }
+
+  .gsm-wf-nname {
+    font-size: .76rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .gsm-hero-heading {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+  }
+
+  .gsm-dots {
+    justify-content: center;
+    margin-top: 18px;
+  }
+
+  .gsm-showcase {
+    padding-bottom: 60px;
+  }
+
+  .gsm-showcase-stripe {
+    margin-bottom: 36px;
+  }
+
+  .gsm-showcase-heading {
+    font-size: 1.9rem;
+  }
+
+  .gsm-browser-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .gsm-host-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .gsm-host-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+  }
+
+  .gsm-host-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .gsm-host-icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+  .gsm-faq-q {
+    font-size: .88rem;
+    padding: 16px 16px;
+  }
+
+  .gsm-faq-body-inner p {
+    padding: 0 16px 16px;
+    font-size: .84rem;
+  }
+
+  .gsm-footer-nav-col {
+    margin-bottom: 32px;
+  }
+
+  .gsm-wf-header {
+    padding: 12px 14px;
+  }
+
+  .gsm-wf-active-badge {
+    font-size: .68rem;
+    padding: 6px 10px;
+  }
+}
